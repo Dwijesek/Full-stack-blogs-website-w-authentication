@@ -29,15 +29,64 @@ controllers.getOne = async (req, res) =>{
   }
 }
 
-controllers.createOne = (req, res) =>{
+controllers.createOne = async(req, res) =>{
   const { title , body, author } = req.body
-  console.log(title, body, author)
-  
-  res.status(200).json({message:"Successful...."})
+  const missing = []
+  if(!title){
+    missing.push('title')
+  }
+  if(!body){
+    missing.push('body')
+  }
+  if(!author){
+    missing.push('author')
+  }
+  if(missing > 0){
+    return res.status(400).json({error:"Please fill in all fields"})
+  }
+
+  try{
+    const singleBlog = await MainData.create({title, body, author})
+    res.status(200).json(singleBlog)
+  }
+  catch(error){
+    res.status(400).json({message:error.message})
+  }  
 }
 
-controllers.deleteOne = (req, res) =>{
-  res.status(200).json({message:"Successful...."})
+controllers.updateOne = async (req, res) => {
+  const { id } = req.params
+  
+  if(!mongoose.Types.ObjectId.isValid(id)){
+    return res.status(400).json({error:"Id is not valid"})
+  }
+  try{
+    const blog = await MainData.findOneAndUpdate({_id:id}, {...req.body})
+    if(!blog){
+      return res.status(400).json({error:"Not Found"})
+    }
+    res.status(200).json(blog)
+  }
+  catch(error){
+    res.status(400).json({message:error.message})
+  }
+}
+
+controllers.deleteOne = async(req, res) => {
+  const { id } = req.params
+  if(!mongoose.Types.ObjectId.isValid(id)){
+    return res.status(400).json({error:"Id is not valid"})
+  }
+  try{
+    const blog = await MainData.findByIdAndDelete(id)
+    if(!blog){
+      return res.status(400).json({error:"Not Found"})
+    }
+    res.status(200).json(blog)
+  }
+  catch(error){
+    res.status(400).json({message:error.message})
+  }
 }
 
 module.exports = controllers

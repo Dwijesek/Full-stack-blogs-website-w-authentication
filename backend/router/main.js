@@ -4,9 +4,11 @@ const controllers = require('../controllers/main')
 
 router.get('/', controllers.getAll)
 
+router.get('/:id', controllers.getOne)
+
 router.post('/', controllers.createOne)
 
-router.post('/:id', controllers.getOne)
+router.patch('/:id', controllers.updateOne)
 
 router.delete('/:id', controllers.deleteOne)
 
