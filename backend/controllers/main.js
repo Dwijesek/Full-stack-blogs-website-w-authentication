@@ -61,7 +61,7 @@ controllers.updateOne = async (req, res) => {
     return res.status(400).json({error:"Id is not valid"})
   }
   try{
-    const blog = await MainData.findOneAndUpdate({_id:id}, {...req.body})
+    const blog = await MainData.findOneAndUpdate({_id:id}, {...req.body}, {new:true})
     if(!blog){
       return res.status(400).json({error:"Not Found"})
     }
