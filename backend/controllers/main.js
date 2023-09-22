@@ -30,7 +30,7 @@ controllers.getOne = async (req, res) =>{
 }
 
 controllers.createOne = async(req, res) =>{
-  const { title , body, author } = req.body
+  const { title , body, author, email } = req.body
   const missing = []
   if(!title){
     missing.push('title')
@@ -41,12 +41,15 @@ controllers.createOne = async(req, res) =>{
   if(!author){
     missing.push('author')
   }
+  if(!email){
+    missing.push('author')
+  }
   if(missing > 0){
     return res.status(400).json({error:"Please fill in all fields"})
   }
 
   try{
-    const singleBlog = await MainData.create({title, body, author})
+    const singleBlog = await MainData.create({title, body, author, email})
     res.status(200).json(singleBlog)
   }
   catch(error){

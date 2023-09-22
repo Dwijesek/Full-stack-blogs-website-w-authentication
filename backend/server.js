@@ -1,15 +1,17 @@
 const express = require('express')
 const app = express()
+const morgan = require('morgan')
+const helmet = require('helmet')
 const mainRoutes = require('./router/main')
+const userRoutes = require('./router/users')
 const mongoose = require('mongoose')
 require('dotenv').config()
 
+app.use(helmet())
+app.use(morgan('tiny'))
 app.use(express.json())
-app.use((req, res, next) => {
-  console.log(req.path, req.method)
-  next()
-})
 
+app.use('/api/user', userRoutes)
 app.use('/api/main', mainRoutes)
 
 app.use((req, res) =>{
