@@ -1,6 +1,13 @@
-const mongoose = require('mongoose')
+//const mongoose = require('mongoose')
 const User = require('../model/users')
+const jwt = require('jsonwebtoken')
+
 const users ={}
+
+const createToken = (id) => {
+  return jwt.sign({id}, process.env.SECRET, {expiresIn: '1d'})
+  
+}
 
 users.login = async(req, res) => {
    const{email, password} =req.body;
@@ -17,13 +24,18 @@ users.login = async(req, res) => {
   }
 
   try{
-    res.json({mssg:'User logged in'})
+    const user = await User.login(email, password)
+    //create token
+    const token =  createToken(user._id)
+    res.status(200).json({email, token})
   }
   catch(error){
     res.status(400).json({message:error.message})
   }
 }
 
+
+//===================Signup================================================
 users.signup = async(req, res) => {
   const{email, password} =req.body;
   const missing = [];
@@ -40,7 +52,11 @@ users.signup = async(req, res) => {
 
  try{
    const user = await User.signup(email, password)
-   res.status(200).json({email, user})
+
+  // create token
+   const token =  createToken(user._id)
+
+   res.status(200).json({email, token})
  }
  catch(error){
    res.status(400).json({error:error.message})
