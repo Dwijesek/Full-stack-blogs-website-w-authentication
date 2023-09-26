@@ -12,6 +12,16 @@ controllers.getAll = async (req, res) =>{
   }
 }
 
+controllers.getSome = async (req, res) =>{
+  try{
+    const allBlogs = await MainData.find({}).sort({createdAt:-1})
+    res.status(200).json(allBlogs)
+  }
+  catch(error){
+    res.status(400).json({message:error.message})
+  }
+}
+
 controllers.getOne = async (req, res) =>{
   const { id } = req.params
   if(!mongoose.Types.ObjectId.isValid(id)){

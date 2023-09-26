@@ -4,6 +4,8 @@ const controllers = require('../controllers/main')
 
 router.get('/', controllers.getAll)
 
+router.get('/myhome', controllers.getSome)
+
 router.get('/:id', controllers.getOne)
 
 router.post('/', controllers.createOne)
